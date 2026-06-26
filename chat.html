@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindCare — Чат</title>
+  <link rel="icon" type="image/x-icon" href="image1.png"/>
+  <link rel="shortcut icon" href="image1.png"/>
+  <link rel="apple-touch-icon" href="image1.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .chat-layout {
+      display: grid; grid-template-columns: 260px 1fr; gap: 28px;
+      align-items: start; padding: 48px 0 60px;
+    }
+    .chat-sidebar { position: sticky; top: 90px; }
+    .chat-sidebar-card { padding: 22px; margin-bottom: 16px; }
+    .chat-sidebar-card h4 { font-weight: 700; margin-bottom: 12px; font-size: 0.95rem; }
+    .quick-prompt {
+      display: block; width: 100%; text-align: left;
+      padding: 10px 14px; margin-bottom: 8px;
+      background: var(--bg); box-shadow: var(--nm-out);
+      border-radius: var(--radius-sm); border: none;
+      font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .quick-prompt:hover { background: var(--lavender); color: var(--lavender-dark); }
+    .online-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; font-weight: 700; color: var(--green);
+      margin-bottom: 16px;
+    }
+    .online-badge::before { content: '●'; animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.3;} }
+    .disclaimer {
+      font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;
+      padding: 12px 16px; background: var(--lavender);
+      border-radius: var(--radius-sm); border-left: 3px solid var(--lavender-dark);
+    }
+    @media (max-width: 768px) {
+      .chat-layout { grid-template-columns: 1fr; }
+      .chat-sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo">
+      <img src="image1.png" alt="" class="logo__img" onerror="this.style.display='none'"/>
+      <span class="logo__text">Mind<span class="logo__accent">Care</span></span>
+    </a>
+    <nav class="nav" id="nav">
+      <ul class="nav__list">
+        <li><a href="index.html"   class="nav__link">Главная</a></li>
+        <li><a href="catalog.html" class="nav__link">Психологи</a></li>
+        <li><a href="tests.html"   class="nav__link">Тесты</a></li>
+        <li><a href="chat.html"    class="nav__link active">Чат</a></li>
+        <li><a href="mood.html"    class="nav__link">Настроение</a></li>
+      </ul>
+    </nav>
+    <button class="burger" id="burger" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+    <button class="btn btn--danger btn--sm header__emergency" id="emergencyBtn">🆘 Экстренная помощь</button>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="page-hero__eyebrow">Поддержка</span>
+    <h1 class="page-hero__title">Анонимный чат-помощник</h1>
+    <p class="page-hero__sub">Поговори с ИИ-помощником прямо сейчас. Без регистрации, без имён.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="chat-layout">
+    <aside class="chat-sidebar">
+      <div class="chat-sidebar-card nm">
+        <div class="online-badge">Помощник онлайн</div>
+        <h4>Быстрые фразы</h4>
+        <button class="quick-prompt" data-text="Мне грустно и я не знаю почему">😢 Мне грустно</button>
+        <button class="quick-prompt" data-text="Я очень тревожусь из-за учёбы">📚 Тревога из-за учёбы</button>
+        <button class="quick-prompt" data-text="Я чувствую себя одиноким">🌑 Чувствую одиночество</button>
+        <button class="quick-prompt" data-text="Мне нужен совет как справиться со стрессом">💡 Как справиться со стрессом</button>
+        <button class="quick-prompt" data-text="Я хочу поговорить с живым психологом">👤 Хочу к психологу</button>
+      </div>
+      <div class="chat-sidebar-card nm">
+        <div class="disclaimer">
+          🔒 Этот чат полностью анонимен. Сообщения не сохраняются и не передаются третьим лицам.
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="chat-widget nm">
+        <div class="chat-widget__messages" id="chatMessages">
+          <div class="chat-message chat-message--bot">
+            <div class="chat-message__bubble">Привет! 🌿 Я твой анонимный помощник MindCare. Здесь безопасно — расскажи, как ты себя чувствуешь?</div>
+          </div>
+        </div>
+        <div class="chat-widget__input-zone">
+          <input type="text" id="chatInput" placeholder="Напиши что-нибудь…" autocomplete="off"/>
+          <button class="chat-widget__send" id="chatSend">Отправить</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-overlay" id="emergencyModal" hidden>
+  <div class="modal nm">
+    <h2>🆘 Экстренная помощь</h2>
+    <p>Если тебе угрожает опасность — звони прямо сейчас:</p>
+    <ul style="margin:18px 0;padding-left:20px;text-align:left;line-height:2.2">
+      <li><strong>8 (800) 2000-122</strong> — Телефон доверия (бесплатно)</li>
+      <li><strong>+7 (495) 575-87-70</strong> — Горячая линия</li>
+    </ul>
+    <button class="btn btn--primary" id="closeEmergency">Понятно, закрыть</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__logo">Mind<span>Care</span></div>
+    <p style="margin-top:8px">© 2026 Психологическая служба колледжа</p>
+    <p style="margin-top:8px">
+      <a href="catalog.html">Психологи</a> ·
+      <a href="tests.html">Тесты</a> ·
+      <a href="chat.html">Чат</a> ·
+      <a href="mood.html">Настроение</a>
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+const chatMessages = document.getElementById('chatMessages');
+const chatInput    = document.getElementById('chatInput');
+const chatSend     = document.getElementById('chatSend');
+let messageCount = 0;
+
+// ── База ответов по ключевым словам ──
+const RESPONSES = [
+  {
+    keys: ['грустно','грусть','грустный','плохо','плохое','тяжело','тяжёло','не хорошо'],
+    replies: [
+      'Мне жаль, что тебе сейчас грустно. 💙 Это нормально — иногда нам бывает тяжело. Хочешь рассказать, что случилось?',
+      'Я слышу тебя. Грусть — это сигнал, что что-то важное задело тебя. Что происходит в последнее время?',
+      'Спасибо, что поделился. Быть грустным — это не слабость. Расскажи мне больше — я рядом 🌿',
+    ]
+  },
+  {
+    keys: ['тревог','тревожно','тревожусь','беспоко','страшно','страх','боюсь','нервничаю'],
+    replies: [
+      'Тревога — это очень неприятное чувство, но ты не один с ней. 🌿 Попробуй сделать несколько глубоких вдохов. Что именно тебя тревожит?',
+      'Я понимаю, как это неприятно. Тревога часто возникает, когда мы переживаем что-то важное. Расскажи, что происходит?',
+      'Слышу тебя — тревога бывает очень изматывающей. Давай разберёмся вместе. Это связано с учёбой или чем-то другим? 💙',
+    ]
+  },
+  {
+    keys: ['учёба','учеба','экзамен','сессия','зачёт','зачет','оценки','преподаватель','пары','задание'],
+    replies: [
+      'Учебный стресс — это очень распространённая проблема среди студентов. 📚 Ты не один в этом. Расскажи, что именно давит больше всего?',
+      'Сессия — это всегда испытание. Главное — не пытаться объять необъятное сразу. Что сейчас кажется самым трудным?',
+      'Понимаю, учёба может быть очень изматывающей. Важно помнить делать перерывы и не забывать о себе. Как давно ты отдыхал? 🌿',
+    ]
+  },
+  {
+    keys: ['одинок','одиноко','одиночество','нет друзей','никто не понимает','никому не нужен'],
+    replies: [
+      'Чувство одиночества — одно из самых тяжёлых. Но то, что ты сейчас здесь и говоришь об этом — уже важный шаг. 💙 Расскажи мне больше.',
+      'Я слышу тебя. Ощущение, что тебя не понимают, бывает очень болезненным. Когда это чувство появилось?',
+      'Ты не один — я рядом прямо сейчас. 🌿 Иногда одиночество — сигнал, что нам нужны новые связи. Есть ли в твоей жизни люди, с которыми хотелось бы сблизиться?',
+    ]
+  },
+  {
+    keys: ['выгора','усталость','устал','устала','нет сил','сил нет','не могу','ничего не хочу'],
+    replies: [
+      'Звучит как сильное истощение. 💙 Когда мы долго работаем без отдыха, силы заканчиваются — это нормальная реакция. Давно ли ты по-настоящему отдыхал?',
+      'Усталость — это сигнал тела и психики: "Мне нужна забота". Что сейчас отнимает у тебя больше всего энергии?',
+      'Я слышу тебя. Иногда "ничего не хотеть" — это способ психики защититься от перегрузки. Расскажи, как выглядит твой обычный день? 🌿',
+    ]
+  },
+  {
+    keys: ['злость','злюсь','злой','раздражает','раздражение','бесит','бешусь','агрессия'],
+    replies: [
+      'Злость — это тоже важное чувство, оно сигнализирует о нарушенных границах или несправедливости. Что случилось? 💙',
+      'Я слышу, что ты злишься. Это нормально. Расскажи мне, что произошло — иногда просто выговориться помогает.',
+      'Раздражение часто бывает, когда накопилась усталость или что-то долго не устраивает. Что именно тебя задело? 🌿',
+    ]
+  },
+  {
+    keys: ['психолог','специалист','записаться','консультация','помощь специалиста','живой человек'],
+    replies: [
+      'Конечно! Записаться к живому специалисту можно прямо на нашем сайте — перейди в раздел <a href="catalog.html" style="color:var(--lavender-dark);font-weight:700">«Психологи»</a>. Там можно выбрать специалиста по направлению. 🌿',
+      'Это отличное решение — поговорить с живым специалистом. Загляни в <a href="catalog.html" style="color:var(--lavender-dark);font-weight:700">каталог психологов</a> — там можно выбрать удобное время. 💙',
+    ]
+  },
+  {
+    keys: ['умереть','смерть','не хочу жить','конец','суицид','покончить','самоповреждение','порезать'],
+    replies: [
+      '⚠️ Я слышу тебя, и это очень важно. Пожалуйста, позвони прямо сейчас на бесплатную горячую линию: <strong>8-800-2000-122</strong>. Там есть живые люди, которые помогут. Ты не один. 💙',
+    ]
+  },
+  {
+    keys: ['привет','здравствуй','здравствуйте','добрый','хай','hello'],
+    replies: [
+      'Привет! 🌿 Рад тебя видеть. Как ты себя чувствуешь сегодня?',
+      'Привет! Я здесь и готов выслушать. Как ты? 💙',
+      'Здравствуй! Рассказывай — что привело тебя сюда сегодня? 🌿',
+    ]
+  },
+  {
+    keys: ['спасибо','благодарю','благодарен','помог','помогло'],
+    replies: [
+      'Я рад, что смог помочь. 🌿 Береги себя! Если захочется поговорить — всегда здесь.',
+      'Это важно — говорить о своих чувствах. Ты молодец, что обратился. 💙 Всегда рядом!',
+    ]
+  },
+  {
+    keys: ['стресс','напряжение','напряжён','давление','давят'],
+    replies: [
+      'Стресс — частый спутник студенческой жизни. 😤 Расскажи, что сейчас больше всего давит?',
+      'Понимаю тебя. Когда всё навалилось сразу — это очень тяжело. Что конкретно вызывает напряжение прямо сейчас?',
+      'Стресс накапливается незаметно. Хочу помочь тебе разобраться. Что сейчас происходит в твоей жизни? 🌿',
+    ]
+  },
+];
+
+// Универсальные ответы — когда ничего не совпало
+const FALLBACK = [
+  'Я слышу тебя. 🌿 Расскажи мне больше — что именно ты чувствуешь?',
+  'Спасибо, что доверяешь мне это. Хочу лучше понять — можешь рассказать подробнее?',
+  'Я рядом и внимательно слушаю. 💙 Что сейчас происходит у тебя?',
+  'Это звучит важно. Расскажи мне больше — я здесь, чтобы поддержать тебя.',
+  'Понимаю, что тебе сейчас непросто. Что больше всего тревожит тебя прямо сейчас? 🌿',
+];
+
+// Уточняющие вопросы после нескольких сообщений
+const FOLLOWUPS = [
+  'Кстати, ты уже пробовал наш <a href="tests.html" style="color:var(--lavender-dark);font-weight:700">тест на стресс</a>? Он помогает лучше понять своё состояние. 📋',
+  'Если захочешь поговорить с живым специалистом — в нашем <a href="catalog.html" style="color:var(--lavender-dark);font-weight:700">каталоге</a> есть замечательные психологи. 🌿',
+  'Попробуй дыхательное упражнение в разделе <a href="mood.html" style="color:var(--lavender-dark);font-weight:700">«Настроение»</a> — иногда это очень помогает снять напряжение. 💙',
+];
+
+function getBotReply(text) {
+  const lower = text.toLowerCase();
+  for (const rule of RESPONSES) {
+    if (rule.keys.some(k => lower.includes(k))) {
+      const pool = rule.replies;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+  }
+  // После 3+ сообщений иногда добавляем ссылку на раздел
+  if (messageCount > 0 && messageCount % 3 === 0) {
+    return FOLLOWUPS[Math.floor(Math.random() * FOLLOWUPS.length)];
+  }
+  return FALLBACK[Math.floor(Math.random() * FALLBACK.length)];
+}
+
+function appendMessage(html, isUser) {
+  const msg = document.createElement('div');
+  msg.className = 'chat-message ' + (isUser ? 'chat-message--user' : 'chat-message--bot');
+  msg.innerHTML = `<div class="chat-message__bubble">${html}</div>`;
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+  const el = document.createElement('div');
+  el.className = 'chat-message chat-message--bot';
+  el.id = 'typingIndicator';
+  el.innerHTML = `<div class="chat-message__bubble chat-typing"><span></span><span></span><span></span></div>`;
+  chatMessages.appendChild(el);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return el;
+}
+
+function sendMessage(text) {
+  text = text.trim();
+  if (!text) return;
+  appendMessage(text, true);
+  chatInput.value = '';
+  chatSend.disabled = true;
+  chatInput.disabled = true;
+  messageCount++;
+
+  const typing = showTyping();
+  const delay = 900 + Math.random() * 700;
+
+  setTimeout(() => {
+    typing.remove();
+    appendMessage(getBotReply(text), false);
+    chatSend.disabled = false;
+    chatInput.disabled = false;
+    chatInput.focus();
+  }, delay);
+}
+
+chatSend.addEventListener('click', () => sendMessage(chatInput.value));
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(chatInput.value); });
+document.querySelectorAll('.quick-prompt').forEach(btn => {
+  btn.addEventListener('click', () => sendMessage(btn.dataset.text));
+});
+</script>
+</body>
+</html>

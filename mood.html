@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindCare — Настроение</title>
+  <link rel="icon" type="image/png" href="image1.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .mood-layout {
+      display: grid; grid-template-columns: 1fr 320px; gap: 32px;
+      align-items: start; padding: 52px 0 68px;
+    }
+
+    /* Checker widget */
+    .mood-checker { padding: 36px; }
+    .mood-checker h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 8px; }
+    .mood-checker__sub { color: var(--text-muted); margin-bottom: 28px; }
+    .mood-emoji-row { display: flex; gap: 12px; justify-content: space-between; margin-bottom: 12px; }
+    .mood-btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .mood-btn { width: 56px; height: 56px; font-size: 1.9rem; border: 2px solid transparent;
+      cursor: pointer; transition: all 0.2s; border-radius: 50%;
+      background: var(--bg); box-shadow: var(--nm-out); display: flex; align-items: center; justify-content: center; }
+    .mood-btn:hover { transform: scale(1.1); background: var(--lavender); border-color: var(--lavender-mid); }
+    .mood-btn.selected { transform: scale(1.18); background: var(--lavender); border-color: var(--lavender-dark); box-shadow: 0 0 0 4px rgba(107,107,168,0.15); }
+    .mood-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+
+    .mood-note { margin-top: 20px; }
+    .mood-note textarea {
+      width: 100%; min-height: 80px; padding: 14px 18px;
+      border: none; box-shadow: var(--nm-in); background: var(--bg);
+      border-radius: var(--radius); outline: none; resize: vertical;
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); margin-bottom: 14px;
+    }
+    #moodResult { font-size: 0.95rem; color: var(--text-muted); min-height: 24px; margin-bottom: 18px; font-weight: 600; }
+
+    /* Calm widget */
+    .calm-section { text-align: center; margin-top: 36px; padding-top: 28px; border-top: 1px solid rgba(107,107,168,0.1); }
+    .calm-section p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px; }
+
+    /* Calendar */
+    .calendar-card { padding: 28px; }
+    .calendar-card h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 6px; }
+    .calendar-card__sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px; }
+    .weekdays { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-bottom: 8px; }
+    .weekday-label { text-align: center; font-size: 0.65rem; font-weight: 700; color: var(--text-muted); padding: 2px; }
+    .mood-calendar { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
+    .mood-day {
+      aspect-ratio: 1; border-radius: 10px; font-size: 1rem;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: var(--nm-out); cursor: default; position: relative;
+    }
+    .mood-day--empty { box-shadow: var(--nm-in); }
+    .mood-day--today { outline: 2px solid var(--lavender-dark); }
+    .mood-day__date { font-size: 0.55rem; color: var(--text-muted); font-weight: 700; position: absolute; top: 4px; right: 5px; }
+    .mood-day__note-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--lavender-dark); position: absolute; bottom: 4px; }
+
+    /* Stats */
+    .stats-card { padding: 24px; margin-top: 16px; }
+    .stats-card h4 { font-weight: 700; margin-bottom: 14px; font-size: 0.95rem; }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(107,107,168,0.08); font-size: 0.88rem; }
+    .stat-row:last-child { border: none; }
+    .stat-row__val { font-weight: 700; color: var(--lavender-dark); }
+
+    @media (max-width: 900px) {
+      .mood-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo">
+      <img src="image1.png" alt="" class="logo__img" onerror="this.style.display='none'"/>
+      <span class="logo__text">Mind<span class="logo__accent">Care</span></span>
+    </a>
+    <nav class="nav" id="nav">
+      <ul class="nav__list">
+        <li><a href="index.html"   class="nav__link">Главная</a></li>
+        <li><a href="catalog.html" class="nav__link">Психологи</a></li>
+        <li><a href="tests.html"   class="nav__link">Тесты</a></li>
+        <li><a href="chat.html"    class="nav__link">Чат</a></li>
+        <li><a href="mood.html"    class="nav__link active">Настроение</a></li>
+      </ul>
+    </nav>
+    <button class="burger" id="burger" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+    <button class="btn btn--danger btn--sm header__emergency" id="emergencyBtn">🆘 Экстренная помощь</button>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="page-hero__eyebrow">Трекер</span>
+    <h1 class="page-hero__title">Дневник настроения</h1>
+    <p class="page-hero__sub">Фиксируй своё состояние каждый день и наблюдай за изменениями.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="mood-layout">
+
+    <!-- LEFT: checker -->
+    <div>
+      <div class="mood-checker nm">
+        <h2>Как ты сегодня?</h2>
+        <p class="mood-checker__sub">Выбери смайлик, который лучше всего описывает твоё состояние прямо сейчас</p>
+
+        <div class="mood-emoji-row">
+          <div class="mood-btn-wrap">
+            <button class="mood-btn" data-mood="1" aria-label="Очень плохо">😭</button>
+            <span class="mood-label">Очень плохо</span>
+          </div>
+          <div class="mood-btn-wrap">
+            <button class="mood-btn" data-mood="2" aria-label="Плохо">🙁</button>
+            <span class="mood-label">Плохо</span>
+          </div>
+          <div class="mood-btn-wrap">
+            <button class="mood-btn" data-mood="3" aria-label="Нормально">😐</button>
+            <span class="mood-label">Нормально</span>
+          </div>
+          <div class="mood-btn-wrap">
+            <button class="mood-btn" data-mood="4" aria-label="Хорошо">🙂</button>
+            <span class="mood-label">Хорошо</span>
+          </div>
+          <div class="mood-btn-wrap">
+            <button class="mood-btn" data-mood="5" aria-label="Отлично">🤩</button>
+            <span class="mood-label">Отлично</span>
+          </div>
+        </div>
+
+        <div class="mood-note">
+          <textarea id="moodNote" placeholder="Хочешь добавить заметку? Что повлияло на настроение сегодня?"></textarea>
+          <div id="moodResult">Выбери смайлик выше, чтобы зафиксировать настроение.</div>
+          <button class="btn btn--primary" id="saveMoodBtn" disabled>Сохранить запись</button>
+        </div>
+      </div>
+
+      <div class="mood-checker nm" style="margin-top:24px">
+        <div class="calm-section">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:10px">Упражнение на дыхание</h3>
+          <p>Если тревога усилилась — попробуй дыхательную технику 4-7-8</p>
+          <button class="btn btn--secondary" id="calmBtn">🌬 Начать дышать</button>
+          <div id="breathGuide" style="display:none;margin-top:20px;font-size:0.95rem;color:var(--lavender-dark);font-weight:700;line-height:2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: calendar + stats -->
+    <aside>
+      <div class="calendar-card nm">
+        <h3>Июнь 2026</h3>
+        <p class="calendar-card__sub">Твои записи за месяц</p>
+        <div class="weekdays">
+          <div class="weekday-label">Пн</div>
+          <div class="weekday-label">Вт</div>
+          <div class="weekday-label">Ср</div>
+          <div class="weekday-label">Чт</div>
+          <div class="weekday-label">Пт</div>
+          <div class="weekday-label">Сб</div>
+          <div class="weekday-label">Вс</div>
+        </div>
+        <div class="mood-calendar" id="moodCalendar"></div>
+      </div>
+
+      <div class="stats-card nm">
+        <h4>📊 Статистика</h4>
+        <div class="stat-row"><span>Записей за месяц</span><span class="stat-row__val" id="statTotal">0</span></div>
+        <div class="stat-row"><span>Среднее настроение</span><span class="stat-row__val" id="statAvg">—</span></div>
+        <div class="stat-row"><span>Лучший день</span><span class="stat-row__val" id="statBest">—</span></div>
+        <div class="stat-row"><span>Серия дней подряд</span><span class="stat-row__val" id="statStreak">0 дней</span></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-overlay" id="emergencyModal" hidden>
+  <div class="modal nm">
+    <h2>🆘 Экстренная помощь</h2>
+    <p>Если тебе угрожает опасность — звони прямо сейчас:</p>
+    <ul style="margin:18px 0;padding-left:20px;text-align:left;line-height:2.2">
+      <li><strong>8 (800) 2000-122</strong> — Телефон доверия (бесплатно)</li>
+      <li><strong>+7 (495) 575-87-70</strong> — Горячая линия</li>
+    </ul>
+    <button class="btn btn--primary" id="closeEmergency">Понятно, закрыть</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__logo">Mind<span>Care</span></div>
+    <p style="margin-top:8px">© 2026 Психологическая служба колледжа</p>
+    <p style="margin-top:8px">
+      <a href="catalog.html">Психологи</a> ·
+      <a href="tests.html">Тесты</a> ·
+      <a href="chat.html">Чат</a> ·
+      <a href="mood.html">Настроение</a>
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+const EMOJIS = { 1:'😭', 2:'🙁', 3:'😐', 4:'🙂', 5:'🤩' };
+const LABELS = { 1:'Очень плохо', 2:'Плохо', 3:'Нормально', 4:'Хорошо', 5:'Отлично' };
+
+// In-memory mood storage (keyed by "YYYY-MM-DD")
+let moodData = JSON.parse(localStorage.getItem('mindcare_mood') || '{}');
+let selectedMood = null;
+
+function saveToStorage() { localStorage.setItem('mindcare_mood', JSON.stringify(moodData)); }
+
+// Mood buttons
+document.querySelectorAll('.mood-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMood = parseInt(btn.dataset.mood);
+    document.getElementById('moodResult').textContent = `Выбрано: ${EMOJIS[selectedMood]} ${LABELS[selectedMood]}`;
+    document.getElementById('saveMoodBtn').disabled = false;
+  });
+});
+
+document.getElementById('saveMoodBtn').addEventListener('click', () => {
+  if (!selectedMood) return;
+  const today = new Date().toISOString().slice(0,10);
+  const note  = document.getElementById('moodNote').value.trim();
+  moodData[today] = { mood: selectedMood, note };
+  saveToStorage();
+  document.getElementById('moodResult').textContent = `✅ Записано! ${EMOJIS[selectedMood]} ${LABELS[selectedMood]}`;
+  buildCalendar();
+  updateStats();
+});
+
+// Calendar for June 2026
+function buildCalendar() {
+  const cal = document.getElementById('moodCalendar');
+  cal.innerHTML = '';
+  // June 2026: June 1 = Monday → getDay()=1, our grid starts Mon=0, so offset=0
+  const daysInJune = 30;
+  const startDow = 0; // no empty cells before June 1
+
+  for (let i = 0; i < startDow; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'mood-day mood-day--empty';
+    cal.appendChild(empty);
+  }
+
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0,10);
+
+  for (let d = 1; d <= daysInJune; d++) {
+    const dateStr = `2026-06-${String(d).padStart(2,'0')}`;
+    const entry   = moodData[dateStr];
+    const div = document.createElement('div');
+    div.className = 'mood-day' + (dateStr === todayStr ? ' mood-day--today' : '');
+
+    const dateLabel = document.createElement('span');
+    dateLabel.className = 'mood-day__date';
+    dateLabel.textContent = d;
+    div.appendChild(dateLabel);
+
+    if (entry) {
+      const em = document.createElement('span');
+      em.textContent = EMOJIS[entry.mood];
+      div.appendChild(em);
+      if (entry.note) {
+        const dot = document.createElement('div');
+        dot.className = 'mood-day__note-dot';
+        div.appendChild(dot);
+      }
+      div.title = `${dateStr}: ${LABELS[entry.mood]}${entry.note ? ' — ' + entry.note : ''}`;
+    } else {
+      div.classList.add('mood-day--empty');
+    }
+    cal.appendChild(div);
+  }
+}
+
+function updateStats() {
+  const entries = Object.entries(moodData).filter(([k]) => k.startsWith('2026-06'));
+  document.getElementById('statTotal').textContent = entries.length;
+
+  if (entries.length) {
+    const avg = entries.reduce((s,[,v]) => s + v.mood, 0) / entries.length;
+    document.getElementById('statAvg').textContent = EMOJIS[Math.round(avg)] + ' ' + avg.toFixed(1);
+
+    const best = entries.reduce((b,[k,v]) => v.mood > b.mood ? {date:k,mood:v.mood} : b, {date:'',mood:0});
+    document.getElementById('statBest').textContent = best.date.slice(8) + ' июня';
+  }
+
+  // Streak
+  let streak = 0;
+  const today = new Date();
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0,10);
+    if (moodData[key]) streak++; else break;
+  }
+  document.getElementById('statStreak').textContent = streak + ' ' + (streak === 1 ? 'день' : streak < 5 ? 'дня' : 'дней');
+}
+
+buildCalendar();
+updateStats();
+
+// Breathing exercise
+const calmBtn = document.getElementById('calmBtn');
+const breathGuide = document.getElementById('breathGuide');
+const breathSteps = [
+  { text: '🫁 Вдохни медленно… 4 секунды', dur: 4000 },
+  { text: '⏸ Задержи дыхание… 7 секунд', dur: 7000 },
+  { text: '💨 Выдыхай медленно… 8 секунд', dur: 8000 },
+];
+let breathInterval = null;
+
+calmBtn.addEventListener('click', () => {
+  if (breathInterval) {
+    clearTimeout(breathInterval);
+    breathInterval = null;
+    calmBtn.textContent = '🌬 Начать дышать';
+    breathGuide.style.display = 'none';
+    calmBtn.classList.remove('pulsing');
+    return;
+  }
+  calmBtn.textContent = '⏹ Остановить';
+  calmBtn.classList.add('pulsing');
+  breathGuide.style.display = 'block';
+  let cycle = 0;
+
+  function runStep(si) {
+    if (!calmBtn.classList.contains('pulsing')) return;
+    breathGuide.textContent = breathSteps[si].text;
+    breathInterval = setTimeout(() => {
+      const next = (si + 1) % breathSteps.length;
+      if (next === 0) cycle++;
+      if (cycle >= 3) {
+        breathGuide.textContent = '✅ Отлично! Ты молодец 🌿';
+        calmBtn.textContent = '🌬 Начать дышать';
+        calmBtn.classList.remove('pulsing');
+        breathInterval = null;
+      } else {
+        runStep(next);
+      }
+    }, breathSteps[si].dur);
+  }
+  runStep(0);
+});
+</script>
+</body>
+</html>

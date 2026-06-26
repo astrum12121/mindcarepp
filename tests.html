@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindCare — Тесты</title>
+  <link rel="icon" type="image/png" href="image1.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .tests-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
+      margin-bottom: 60px;
+    }
+    .test-card {
+      padding: 28px 24px; cursor: pointer;
+      transition: box-shadow var(--transition), transform var(--transition);
+      border: 2px solid transparent;
+    }
+    .test-card:hover { box-shadow: var(--nm-hover); transform: translateY(-3px); }
+    .test-card.selected { border-color: var(--lavender-dark); }
+    .test-card__icon { font-size: 2.5rem; margin-bottom: 14px; display: block; }
+    .test-card__title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .test-card__desc { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px; }
+    .test-card__meta { display: flex; gap: 12px; font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+    .test-card__meta span { display: flex; align-items: center; gap: 4px; }
+
+    .active-test { max-width: 700px; margin: 0 auto; }
+    .active-test__back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.88rem; font-weight: 700; color: var(--lavender-dark);
+      cursor: pointer; margin-bottom: 28px; padding: 8px 16px;
+      background: var(--bg); box-shadow: var(--nm-out); border-radius: var(--radius-pill);
+      border: none;
+    }
+    .active-test__back:hover { background: var(--lavender); }
+
+    .test-category-label {
+      display: inline-block; padding: 4px 14px; border-radius: var(--radius-pill);
+      font-size: 0.75rem; font-weight: 700; margin-bottom: 28px;
+    }
+    .cat-stress  { background: #FFE0E0; color: #c0392b; }
+    .cat-anxiety { background: #FFF3CD; color: #856404; }
+    .cat-burnout { background: #E8EAF6; color: #3949AB; }
+
+    /* result recommendation */
+    .result-rec {
+      background: var(--lavender); border-radius: var(--radius);
+      padding: 20px 24px; margin-top: 20px; text-align: left;
+    }
+    .result-rec__title { font-weight: 700; margin-bottom: 6px; color: var(--lavender-dark); }
+    .result-rec__text { font-size: 0.88rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo">
+      <img src="image1.png" alt="" class="logo__img" onerror="this.style.display='none'"/>
+      <span class="logo__text">Mind<span class="logo__accent">Care</span></span>
+    </a>
+    <nav class="nav" id="nav">
+      <ul class="nav__list">
+        <li><a href="index.html"   class="nav__link">Главная</a></li>
+        <li><a href="catalog.html" class="nav__link">Психологи</a></li>
+        <li><a href="tests.html"   class="nav__link active">Тесты</a></li>
+        <li><a href="chat.html"    class="nav__link">Чат</a></li>
+        <li><a href="mood.html"    class="nav__link">Настроение</a></li>
+      </ul>
+    </nav>
+    <button class="burger" id="burger" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+    <button class="btn btn--danger btn--sm header__emergency" id="emergencyBtn">🆘 Экстренная помощь</button>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="page-hero__eyebrow">Самодиагностика</span>
+    <h1 class="page-hero__title">Узнай своё состояние</h1>
+    <p class="page-hero__sub">Выбери тест ниже. Результаты конфиденциальны и видны только тебе.</p>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+
+    <!-- Выбор теста -->
+    <div id="testPicker">
+      <div class="section-header" style="margin-bottom:32px">
+        <span class="section-eyebrow">Выбери тест</span>
+        <h2 class="section-title">Что хочешь проверить?</h2>
+      </div>
+      <div class="tests-grid">
+        <div class="test-card nm reveal" data-test="stress" tabindex="0">
+          <span class="test-card__icon">😤</span>
+          <div class="test-card__title">Уровень стресса</div>
+          <div class="test-card__desc">Оцени, насколько напряжена твоя нервная система прямо сейчас.</div>
+          <div class="test-card__meta">
+            <span>⏱ 2 минуты</span>
+            <span>❓ 5 вопросов</span>
+          </div>
+        </div>
+        <div class="test-card nm reveal" data-test="anxiety" tabindex="0">
+          <span class="test-card__icon">😰</span>
+          <div class="test-card__title">Уровень тревожности</div>
+          <div class="test-card__desc">Проверь, насколько тревога влияет на твою повседневную жизнь.</div>
+          <div class="test-card__meta">
+            <span>⏱ 3 минуты</span>
+            <span>❓ 6 вопросов</span>
+          </div>
+        </div>
+        <div class="test-card nm reveal" data-test="burnout" tabindex="0">
+          <span class="test-card__icon">🔥</span>
+          <div class="test-card__title">Эмоциональное выгорание</div>
+          <div class="test-card__desc">Выясни, есть ли признаки профессионального или учебного выгорания.</div>
+          <div class="test-card__meta">
+            <span>⏱ 4 минуты</span>
+            <span>❓ 7 вопросов</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Активный тест -->
+    <div id="testRunner" hidden class="active-test">
+      <button class="active-test__back" id="backToTests">← К списку тестов</button>
+
+      <div class="test-widget nm">
+        <div id="testIntro">
+          <div class="test-intro-icon" id="introIcon"></div>
+          <span class="test-category-label" id="introCat"></span>
+          <h3 id="introTitle"></h3>
+          <p id="introDesc"></p>
+          <button class="btn btn--primary" id="startTest">Начать тест</button>
+        </div>
+
+        <div id="testQuestions" hidden>
+          <div class="test-progress-bar"><div class="test-progress" id="progressBar"></div></div>
+          <span class="test-step" id="testStep"></span>
+          <h3 class="test-question" id="questionText"></h3>
+          <div class="test-answers" id="answersContainer"></div>
+        </div>
+
+        <div id="testResult" hidden>
+          <span class="test-result-emoji" id="resultEmoji"></span>
+          <div class="test-result-badge" id="resultBadge"></div>
+          <h3 class="test-result-title" id="resultTitle"></h3>
+          <p class="test-result-desc" id="resultDesc"></p>
+          <div class="result-rec" id="resultRec">
+            <div class="result-rec__title">💡 Рекомендация</div>
+            <div class="result-rec__text" id="resultRecText"></div>
+          </div>
+          <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn--secondary" id="retakeTest">Пройти заново</button>
+            <a href="catalog.html" class="btn btn--primary">Найти специалиста</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-overlay" id="emergencyModal" hidden>
+  <div class="modal nm">
+    <h2>🆘 Экстренная помощь</h2>
+    <p>Если тебе угрожает опасность — звони прямо сейчас:</p>
+    <ul style="margin:18px 0;padding-left:20px;text-align:left;line-height:2.2">
+      <li><strong>8 (800) 2000-122</strong> — Телефон доверия (бесплатно)</li>
+      <li><strong>+7 (495) 575-87-70</strong> — Горячая линия</li>
+    </ul>
+    <button class="btn btn--primary" id="closeEmergency">Понятно, закрыть</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__logo">Mind<span>Care</span></div>
+    <p style="margin-top:8px">© 2026 Психологическая служба колледжа</p>
+    <p style="margin-top:8px">
+      <a href="catalog.html">Психологи</a> ·
+      <a href="tests.html">Тесты</a> ·
+      <a href="chat.html">Чат</a> ·
+      <a href="mood.html">Настроение</a>
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+const TESTS = {
+  stress: {
+    icon: '😤', title: 'Тест на уровень стресса',
+    catClass: 'cat-stress', catLabel: 'Стресс',
+    desc: 'Ответь честно на 5 вопросов. Это займёт около 2 минут.',
+    questions: [
+      { text: 'Как ты оцениваешь своё общее самочувствие на этой неделе?',
+        answers: [{text:'Отлично, всё под контролем',score:0},{text:'Нормально, небольшая усталость',score:1},{text:'Тяжело, с трудом справляюсь',score:2}] },
+      { text: 'Насколько сложно тебе сосредоточиться?',
+        answers: [{text:'Легко — я сфокусирован',score:0},{text:'Иногда отвлекаюсь',score:1},{text:'Почти невозможно собраться',score:2}] },
+      { text: 'Как ты спишь в последнее время?',
+        answers: [{text:'Хорошо, высыпаюсь',score:0},{text:'Иногда тяжело засыпаю',score:1},{text:'Плохо, часто просыпаюсь',score:2}] },
+      { text: 'Как часто ты чувствуешь раздражительность?',
+        answers: [{text:'Редко или никогда',score:0},{text:'Иногда',score:1},{text:'Почти каждый день',score:2}] },
+      { text: 'Есть ли у тебя физические симптомы: головная боль, напряжение в теле?',
+        answers: [{text:'Нет',score:0},{text:'Иногда',score:1},{text:'Часто',score:2}] },
+    ],
+    results: [
+      { max:3, emoji:'🌿', badge:'badge--ok', title:'Стресс в норме', desc:'Твой уровень стресса невысокий. Продолжай заботиться о себе!', rec:'Поддерживай режим сна и регулярную физическую активность.' },
+      { max:6, emoji:'⚠️', badge:'badge--warn', title:'Умеренный стресс', desc:'Стресс присутствует и влияет на жизнь. Стоит уделить внимание самочувствию.', rec:'Попробуй практики осознанности или дыхательные упражнения. Запишись на консультацию, если стресс не проходит.' },
+      { max:99, emoji:'🔴', badge:'badge--alert', title:'Высокий уровень стресса', desc:'Уровень стресса повышен. Рекомендуем обратиться к специалисту.', rec:'Пожалуйста, не откладывай визит к психологу. Это важно для твоего здоровья.' },
+    ]
+  },
+  anxiety: {
+    icon: '😰', title: 'Тест на тревожность',
+    catClass: 'cat-anxiety', catLabel: 'Тревожность',
+    desc: 'Проверь, насколько тревога влияет на твою жизнь. 6 вопросов, 3 минуты.',
+    questions: [
+      { text: 'Часто ли тебя беспокоят мысли о будущем?',
+        answers: [{text:'Редко',score:0},{text:'Иногда',score:1},{text:'Почти постоянно',score:2}] },
+      { text: 'Испытываешь ли ты беспокойство без явной причины?',
+        answers: [{text:'Нет',score:0},{text:'Иногда',score:1},{text:'Часто',score:2}] },
+      { text: 'Замечаешь ли физические признаки тревоги (учащённое сердцебиение, потливость)?',
+        answers: [{text:'Нет',score:0},{text:'Редко',score:1},{text:'Часто',score:2}] },
+      { text: 'Избегаешь ли ты ситуаций из-за страха или беспокойства?',
+        answers: [{text:'Нет',score:0},{text:'Иногда',score:1},{text:'Регулярно',score:2}] },
+      { text: 'Трудно ли тебе расслабиться даже в спокойной обстановке?',
+        answers: [{text:'Нет, расслабляюсь легко',score:0},{text:'Иногда трудно',score:1},{text:'Да, почти невозможно',score:2}] },
+      { text: 'Мешает ли тревога выполнять повседневные дела?',
+        answers: [{text:'Нет',score:0},{text:'Немного мешает',score:1},{text:'Серьёзно мешает',score:2}] },
+    ],
+    results: [
+      { max:4, emoji:'😌', badge:'badge--ok', title:'Тревожность в норме', desc:'Уровень тревоги не выходит за пределы нормы. Продолжай в том же духе!', rec:'Сохраняй баланс между работой и отдыхом. Практика благодарности помогает снизить фоновую тревогу.' },
+      { max:8, emoji:'😟', badge:'badge--warn', title:'Умеренная тревожность', desc:'Тревога присутствует и стоит уделить ей внимание.', rec:'Попробуй вести дневник тревожных мыслей. Дыхательные техники (4-7-8) хорошо помогают.' },
+      { max:99, emoji:'😨', badge:'badge--alert', title:'Высокая тревожность', desc:'Тревога значительно влияет на жизнь. Обратись к специалисту.', rec:'Когнитивно-поведенческая терапия очень эффективна при тревожных расстройствах. Запишись к нашему специалисту.' },
+    ]
+  },
+  burnout: {
+    icon: '🔥', title: 'Тест на выгорание',
+    catClass: 'cat-burnout', catLabel: 'Выгорание',
+    desc: 'Выясни, есть ли признаки эмоционального выгорания. 7 вопросов, 4 минуты.',
+    questions: [
+      { text: 'Чувствуешь ли ты эмоциональное истощение после учёбы/работы?',
+        answers: [{text:'Редко',score:0},{text:'Иногда',score:1},{text:'Почти всегда',score:2}] },
+      { text: 'Снизилась ли твоя мотивация к учёбе или работе?',
+        answers: [{text:'Нет, мотивация на месте',score:0},{text:'Немного снизилась',score:1},{text:'Сильно снизилась',score:2}] },
+      { text: 'Испытываешь ли ты цинизм или безразличие к учёбе?',
+        answers: [{text:'Нет',score:0},{text:'Иногда',score:1},{text:'Часто',score:2}] },
+      { text: 'Труднее ли стало выполнять задания, которые раньше давались легко?',
+        answers: [{text:'Нет',score:0},{text:'Немного труднее',score:1},{text:'Значительно труднее',score:2}] },
+      { text: 'Чувствуешь ли ты, что твои усилия не приносят результатов?',
+        answers: [{text:'Нет',score:0},{text:'Иногда',score:1},{text:'Часто',score:2}] },
+      { text: 'Отстранился ли ты от друзей или социальных активностей?',
+        answers: [{text:'Нет',score:0},{text:'Немного',score:1},{text:'Значительно',score:2}] },
+      { text: 'Есть ли у тебя физические симптомы: усталость, частые болезни?',
+        answers: [{text:'Нет',score:0},{text:'Иногда',score:1},{text:'Часто',score:2}] },
+    ],
+    results: [
+      { max:5, emoji:'✨', badge:'badge--ok', title:'Выгорания нет', desc:'Признаков выгорания не обнаружено. Ты хорошо управляешь своими ресурсами!', rec:'Продолжай следить за балансом. Регулярный отдых — лучшая профилактика выгорания.' },
+      { max:9, emoji:'⚡', badge:'badge--warn', title:'Начальные признаки выгорания', desc:'Есть некоторые признаки, на которые стоит обратить внимание.', rec:'Попробуй снизить нагрузку и включить в расписание время для восстановления. Хобби и физическая активность помогают.' },
+      { max:99, emoji:'🆘', badge:'badge--alert', title:'Высокий риск выгорания', desc:'Признаки выгорания выражены. Важно принять меры прямо сейчас.', rec:'Обязательно обратись к специалисту. Выгорание — это не лень, это состояние, при котором нужна профессиональная поддержка.' },
+    ]
+  }
+};
+
+let activeTest = null, currentQ = 0, totalScore = 0;
+
+function initTestRunner(testKey) {
+  activeTest = TESTS[testKey];
+  currentQ = 0; totalScore = 0;
+
+  document.getElementById('testPicker').setAttribute('hidden','');
+  document.getElementById('testRunner').removeAttribute('hidden');
+
+  document.getElementById('introIcon').textContent = activeTest.icon;
+  const cat = document.getElementById('introCat');
+  cat.textContent = activeTest.catLabel;
+  cat.className = 'test-category-label ' + activeTest.catClass;
+  document.getElementById('introTitle').textContent = activeTest.title;
+  document.getElementById('introDesc').textContent = activeTest.desc;
+
+  ['testIntro','testQuestions','testResult'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('hidden','');
+  });
+  document.getElementById('testIntro').removeAttribute('hidden');
+}
+
+document.querySelectorAll('.test-card').forEach(card => {
+  card.addEventListener('click', () => initTestRunner(card.dataset.test));
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') initTestRunner(card.dataset.test); });
+});
+
+document.getElementById('backToTests').addEventListener('click', () => {
+  document.getElementById('testRunner').setAttribute('hidden','');
+  document.getElementById('testPicker').removeAttribute('hidden');
+  activeTest = null;
+});
+
+document.getElementById('startTest').addEventListener('click', () => {
+  document.getElementById('testIntro').setAttribute('hidden','');
+  document.getElementById('testQuestions').removeAttribute('hidden');
+  showQuestion(0);
+});
+
+document.getElementById('retakeTest').addEventListener('click', () => {
+  currentQ = 0; totalScore = 0;
+  document.getElementById('testResult').setAttribute('hidden','');
+  document.getElementById('testQuestions').removeAttribute('hidden');
+  showQuestion(0);
+});
+
+function showQuestion(index) {
+  const q = activeTest.questions[index];
+  document.getElementById('progressBar').style.width = `${((index+1)/activeTest.questions.length)*100}%`;
+  document.getElementById('testStep').textContent = `Вопрос ${index+1} из ${activeTest.questions.length}`;
+  document.getElementById('questionText').textContent = q.text;
+  const cont = document.getElementById('answersContainer');
+  cont.innerHTML = '';
+  q.answers.forEach(ans => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = ans.text;
+    btn.addEventListener('click', () => {
+      totalScore += ans.score;
+      currentQ++;
+      if (currentQ < activeTest.questions.length) showQuestion(currentQ);
+      else showResult();
+    });
+    cont.appendChild(btn);
+  });
+}
+
+function showResult() {
+  document.getElementById('testQuestions').setAttribute('hidden','');
+  document.getElementById('testResult').removeAttribute('hidden');
+  const r = activeTest.results.find(r => totalScore <= r.max);
+  document.getElementById('resultEmoji').textContent = r.emoji;
+  const badge = document.getElementById('resultBadge');
+  badge.textContent = r.title;
+  badge.className = 'test-result-badge ' + r.badge;
+  document.getElementById('resultTitle').textContent = r.title;
+  document.getElementById('resultDesc').textContent = r.desc;
+  document.getElementById('resultRecText').textContent = r.rec;
+}
+</script>
+</body>
+</html>

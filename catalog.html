@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindCare — Психологи</title>
+  <link rel="icon" type="image/x-icon" href="image1.png"/>
+  <link rel="shortcut icon" href="image1.png"/>
+  <link rel="apple-touch-icon" href="image1.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .psych-detail-grid {
+      display: grid; grid-template-columns: 1fr 340px; gap: 40px; align-items: start;
+    }
+    .sidebar-card { padding: 28px; position: sticky; top: 90px; }
+    .sidebar-card h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 16px; }
+    .sidebar-steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+    .sidebar-step { display: flex; gap: 12px; align-items: flex-start; }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: var(--lavender); color: var(--lavender-dark);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700;
+    }
+    .step-text { font-size: 0.88rem; color: var(--text-muted); padding-top: 4px; }
+
+    .search-bar {
+      display: flex; gap: 12px; margin-bottom: 28px;
+    }
+    .search-bar input {
+      flex: 1; padding: 12px 20px;
+      border: none; box-shadow: var(--nm-in);
+      background: var(--bg); border-radius: var(--radius-pill);
+      outline: none; font-size: 0.95rem; font-family: inherit;
+    }
+
+    .psych-card__rating { display: flex; align-items: center; gap: 4px; font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+    .stars { color: #F5A623; }
+    .psych-card__exp { font-size: 0.8rem; color: var(--text-muted); }
+
+    @media (max-width: 900px) {
+      .psych-detail-grid { grid-template-columns: 1fr; }
+      .sidebar-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo">
+      <img src="image1.png" alt="" class="logo__img" onerror="this.style.display='none'"/>
+      <span class="logo__text">Mind<span class="logo__accent">Care</span></span>
+    </a>
+    <nav class="nav" id="nav">
+      <ul class="nav__list">
+        <li><a href="index.html"   class="nav__link">Главная</a></li>
+        <li><a href="catalog.html" class="nav__link active">Психологи</a></li>
+        <li><a href="tests.html"   class="nav__link">Тесты</a></li>
+        <li><a href="chat.html"    class="nav__link">Чат</a></li>
+        <li><a href="mood.html"    class="nav__link">Настроение</a></li>
+      </ul>
+    </nav>
+    <button class="burger" id="burger" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+    <button class="btn btn--danger btn--sm header__emergency" id="emergencyBtn">🆘 Экстренная помощь</button>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="page-hero__eyebrow">Специалисты</span>
+    <h1 class="page-hero__title">Выбери своего психолога</h1>
+    <p class="page-hero__sub">Все специалисты работают строго конфиденциально в соответствии с этическим кодексом. Выбери по направлению и методу работы.</p>
+  </div>
+</div>
+
+<section style="padding: 60px 0;">
+  <div class="container">
+    <div class="psych-detail-grid">
+      <div>
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="🔍  Поиск по имени или специализации…"/>
+        </div>
+
+        <div class="filters" role="group" aria-label="Фильтры">
+          <button class="filter-tag active" data-filter="all">Все</button>
+          <button class="filter-tag" data-filter="anxiety">Тревожность</button>
+          <button class="filter-tag" data-filter="burnout">Выгорание</button>
+          <button class="filter-tag" data-filter="relations">Отношения</button>
+          <button class="filter-tag" data-filter="study">Учёба</button>
+          <button class="filter-tag" data-filter="trauma">Травма</button>
+        </div>
+
+        <div class="catalog__grid" id="catalogGrid">
+
+          <article class="psych-card nm reveal" data-tags="anxiety burnout study" data-name="наталья сергеевна когнитивно-поведенческая" tabindex="0">
+            <div class="psych-card__top">
+              <div class="psych-card__avatar">🌿</div>
+              <div>
+                <h3 class="psych-card__name">Наталья Сергеевна</h3>
+                <p class="psych-card__spec">Когнитивно-поведенческая терапия</p>
+                <p class="psych-card__exp">Опыт 8 лет</p>
+              </div>
+            </div>
+            <div class="psych-card__tags">
+              <span class="tag">Тревожность</span>
+              <span class="tag">Выгорание</span>
+              <span class="tag">Учёба</span>
+            </div>
+            <div class="psych-card__footer">
+              <div>
+                <div class="psych-card__rating"><span class="stars">★★★★★</span> 4.9</div>
+                <span class="psych-card__avail">● Принимает сейчас</span>
+              </div>
+              <a href="chat.html" class="btn btn--primary btn--sm">Записаться</a>
+            </div>
+          </article>
+
+          <article class="psych-card nm reveal" data-tags="relations anxiety trauma" data-name="михаил юрьевич гештальт кризисный" tabindex="0">
+            <div class="psych-card__top">
+              <div class="psych-card__avatar">🌸</div>
+              <div>
+                <h3 class="psych-card__name">Михаил Юрьевич</h3>
+                <p class="psych-card__spec">Гештальт-терапевт, кризисный психолог</p>
+                <p class="psych-card__exp">Опыт 11 лет</p>
+              </div>
+            </div>
+            <div class="psych-card__tags">
+              <span class="tag">Отношения</span>
+              <span class="tag">Тревожность</span>
+              <span class="tag">Травма</span>
+            </div>
+            <div class="psych-card__footer">
+              <div>
+                <div class="psych-card__rating"><span class="stars">★★★★★</span> 5.0</div>
+                <span class="psych-card__avail">● Принимает сейчас</span>
+              </div>
+              <a href="chat.html" class="btn btn--primary btn--sm">Записаться</a>
+            </div>
+          </article>
+
+          <article class="psych-card nm reveal" data-tags="burnout study relations" data-name="елена викторовна семейный психоаналитик" tabindex="0">
+            <div class="psych-card__top">
+              <div class="psych-card__avatar">🌷</div>
+              <div>
+                <h3 class="psych-card__name">Елена Викторовна</h3>
+                <p class="psych-card__spec">Семейный психолог, психоаналитик</p>
+                <p class="psych-card__exp">Опыт 15 лет</p>
+              </div>
+            </div>
+            <div class="psych-card__tags">
+              <span class="tag">Выгорание</span>
+              <span class="tag">Учёба</span>
+              <span class="tag">Отношения</span>
+            </div>
+            <div class="psych-card__footer">
+              <div>
+                <div class="psych-card__rating"><span class="stars">★★★★☆</span> 4.7</div>
+                <span class="psych-card__avail psych-card__avail--busy">○ Запись на след. неделю</span>
+              </div>
+              <a href="chat.html" class="btn btn--secondary btn--sm">Записаться</a>
+            </div>
+          </article>
+
+          <article class="psych-card nm reveal" data-tags="anxiety trauma burnout" data-name="анна павловна арт-терапия травма" tabindex="0">
+            <div class="psych-card__top">
+              <div class="psych-card__avatar">🎨</div>
+              <div>
+                <h3 class="psych-card__name">Анна Павловна</h3>
+                <p class="psych-card__spec">Арт-терапевт, специалист по травме</p>
+                <p class="psych-card__exp">Опыт 6 лет</p>
+              </div>
+            </div>
+            <div class="psych-card__tags">
+              <span class="tag">Тревожность</span>
+              <span class="tag">Травма</span>
+              <span class="tag">Выгорание</span>
+            </div>
+            <div class="psych-card__footer">
+              <div>
+                <div class="psych-card__rating"><span class="stars">★★★★★</span> 4.8</div>
+                <span class="psych-card__avail">● Принимает сейчас</span>
+              </div>
+              <a href="chat.html" class="btn btn--primary btn--sm">Записаться</a>
+            </div>
+          </article>
+
+          <article class="psych-card nm reveal" data-tags="study burnout" data-name="дмитрий алексеевич учёба стресс" tabindex="0">
+            <div class="psych-card__top">
+              <div class="psych-card__avatar">📚</div>
+              <div>
+                <h3 class="psych-card__name">Дмитрий Алексеевич</h3>
+                <p class="psych-card__spec">Психолог в образовании, коуч</p>
+                <p class="psych-card__exp">Опыт 9 лет</p>
+              </div>
+            </div>
+            <div class="psych-card__tags">
+              <span class="tag">Учёба</span>
+              <span class="tag">Выгорание</span>
+            </div>
+            <div class="psych-card__footer">
+              <div>
+                <div class="psych-card__rating"><span class="stars">★★★★☆</span> 4.6</div>
+                <span class="psych-card__avail psych-card__avail--busy">○ Запись на след. неделю</span>
+              </div>
+              <a href="chat.html" class="btn btn--secondary btn--sm">Записаться</a>
+            </div>
+          </article>
+
+          <article class="psych-card nm reveal" data-tags="relations trauma anxiety" data-name="ольга игоревна нарративная терапия" tabindex="0">
+            <div class="psych-card__top">
+              <div class="psych-card__avatar">🌻</div>
+              <div>
+                <h3 class="psych-card__name">Ольга Игоревна</h3>
+                <p class="psych-card__spec">Нарративный терапевт</p>
+                <p class="psych-card__exp">Опыт 7 лет</p>
+              </div>
+            </div>
+            <div class="psych-card__tags">
+              <span class="tag">Отношения</span>
+              <span class="tag">Травма</span>
+              <span class="tag">Тревожность</span>
+            </div>
+            <div class="psych-card__footer">
+              <div>
+                <div class="psych-card__rating"><span class="stars">★★★★★</span> 4.9</div>
+                <span class="psych-card__avail">● Принимает сейчас</span>
+              </div>
+              <a href="chat.html" class="btn btn--primary btn--sm">Записаться</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <aside>
+        <div class="sidebar-card nm">
+          <h3>Как записаться?</h3>
+          <div class="sidebar-steps">
+            <div class="sidebar-step">
+              <div class="step-num">1</div>
+              <div class="step-text">Выбери специалиста по направлению или методу работы</div>
+            </div>
+            <div class="sidebar-step">
+              <div class="step-num">2</div>
+              <div class="step-text">Нажми «Записаться» и оставь заявку в чате</div>
+            </div>
+            <div class="sidebar-step">
+              <div class="step-num">3</div>
+              <div class="step-text">Получи подтверждение и ссылку на встречу</div>
+            </div>
+          </div>
+          <a href="chat.html" class="btn btn--primary" style="width:100%;text-align:center">Написать сейчас</a>
+        </div>
+
+        <div class="sidebar-card nm" style="margin-top:20px">
+          <h3>Не знаешь с чего начать?</h3>
+          <p style="font-size:0.88rem;color:var(--text-muted);margin:12px 0 18px">Пройди короткий тест и получи рекомендацию специалиста под твой запрос.</p>
+          <a href="tests.html" class="btn btn--secondary" style="width:100%;text-align:center">Пройти тест</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookingModal" hidden>
+  <div class="modal nm">
+    <div style="font-size:2.5rem;margin-bottom:12px">📞</div>
+    <h2 style="color:var(--lavender-dark)">Запись на приём</h2>
+    <p style="margin:14px 0 6px">Позвони нашему оператору, чтобы выбрать удобное время:</p>
+    <a href="tel:+79002978001" style="
+      display:inline-block;
+      font-size:1.6rem;font-weight:800;
+      color:var(--lavender-dark);
+      margin:12px 0 6px;
+      letter-spacing:1px;
+    ">+7 (900) 297-80-01</a>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:24px">Пн–Пт, 9:00–18:00 · Звонок бесплатный</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="tel:+79002978001" class="btn btn--primary">Позвонить сейчас</a>
+      <button class="btn btn--secondary" id="closeBooking">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-overlay" id="emergencyModal" hidden>
+  <div class="modal nm">
+    <h2>🆘 Экстренная помощь</h2>
+    <p>Если тебе угрожает опасность — звони прямо сейчас:</p>
+    <ul style="margin:18px 0;padding-left:20px;text-align:left;line-height:2.2">
+      <li><strong>8 (800) 2000-122</strong> — Телефон доверия (бесплатно)</li>
+      <li><strong>+7 (495) 575-87-70</strong> — Горячая линия</li>
+    </ul>
+    <button class="btn btn--primary" id="closeEmergency">Понятно, закрыть</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__logo">Mind<span>Care</span></div>
+    <p style="margin-top:8px">© 2026 Психологическая служба колледжа</p>
+    <p style="margin-top:8px">
+      <a href="catalog.html">Психологи</a> ·
+      <a href="tests.html">Тесты</a> ·
+      <a href="chat.html">Чат</a> ·
+      <a href="mood.html">Настроение</a>
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+  // Booking modal
+  const bookingModal = document.getElementById('bookingModal');
+  const closeBooking = document.getElementById('closeBooking');
+
+  document.querySelectorAll('.psych-card .btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      bookingModal.removeAttribute('hidden');
+    });
+  });
+
+  closeBooking.addEventListener('click', () => bookingModal.setAttribute('hidden',''));
+  bookingModal.addEventListener('click', e => { if (e.target === bookingModal) bookingModal.setAttribute('hidden',''); });
+
+  // Search
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.toLowerCase();
+      document.querySelectorAll('.psych-card').forEach(card => {
+        const name = (card.dataset.name || '').toLowerCase();
+        if (name.includes(q)) { card.classList.remove('card-hidden','card-fade'); }
+        else { card.classList.add('card-fade','card-hidden'); }
+      });
+    });
+  }
+</script>
+</body>
+</html>

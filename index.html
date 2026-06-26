@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindCare — Психологическая помощь</title>
+  <link rel="icon" type="image/png" href="image1.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* ── INDEX-ONLY STYLES ── */
+    .hero {
+      min-height: 92vh;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding: 80px 0 60px;
+    }
+    .hero__blobs { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(70px); opacity: 0.45;
+      animation: floatBlob 8s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 480px; height: 480px; background: #D8D4F5; top: -120px; right: -80px; animation-delay: 0s; }
+    .blob-2 { width: 320px; height: 320px; background: #C8E6C9; bottom: -60px; left: -60px; animation-delay: 2s; }
+    .blob-3 { width: 200px; height: 200px; background: #F8BBD0; top: 40%; right: 30%; animation-delay: 4s; }
+    @keyframes floatBlob { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(20px, -25px) scale(1.05); } }
+
+    .hero__inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: center; position: relative; z-index: 1;
+    }
+    .hero__eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--lavender); color: var(--lavender-dark);
+      padding: 6px 16px; border-radius: var(--radius-pill);
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero__eyebrow::before { content: '●'; font-size: 0.5rem; animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    .hero__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.4rem; font-weight: 800; line-height: 1.1;
+      margin-bottom: 20px; color: var(--text-dark);
+    }
+    .hero__title em { font-style: normal; color: var(--lavender-dark); }
+
+    .hero__sub { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 36px; max-width: 440px; }
+    .hero__actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
+    .hero__anon {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--text-muted); font-weight: 600;
+    }
+    .hero__anon::before { content: '🔒'; font-size: 0.9rem; }
+
+    .hero__visual { position: relative; }
+    .hero__logo-wrap {
+      width: 100%; aspect-ratio: 1;
+      max-width: 380px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+      box-shadow: 12px 12px 30px var(--nm-dark), -8px -8px 20px var(--nm-light);
+      border-radius: 40px;
+      position: relative; overflow: hidden;
+    }
+    .hero__logo-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(145deg, rgba(255,255,255,0.3) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero__logo-img { width: 75%; height: 75%; object-fit: contain; display: block; }
+    .hero__logo-fallback {
+      font-size: 5rem; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+    }
+    .hero__float-badge {
+      position: absolute;
+      background: var(--bg); box-shadow: var(--nm-out);
+      border-radius: 14px; padding: 10px 16px;
+      font-size: 0.82rem; font-weight: 700; color: var(--text-dark);
+      display: flex; align-items: center; gap: 8px; white-space: nowrap;
+      animation: floatBadge 3s ease-in-out infinite alternate;
+    }
+    .badge-1 { bottom: -16px; left: -20px; animation-delay: 0s; }
+    .badge-2 { top: -16px; right: -20px; animation-delay: 1.5s; }
+    @keyframes floatBadge { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+
+    /* ── STATS ── */
+    .stats { padding: 48px 0; }
+    .stats__grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 20px; text-align: center;
+    }
+    .stat-card { padding: 28px 20px; }
+    .stat-card__num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 800; color: var(--lavender-dark); display: block; margin-bottom: 6px;
+    }
+    .stat-card__label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
+
+    /* ── FEATURES ── */
+    .features { padding: 72px 0; background: linear-gradient(180deg, var(--bg) 0%, rgba(230,230,250,0.3) 100%); }
+    .features__header { text-align: center; margin-bottom: 48px; }
+    .features__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .feature-card {
+      padding: 32px 28px; display: flex; gap: 20px; align-items: flex-start;
+      transition: box-shadow var(--transition), transform var(--transition); cursor: pointer;
+    }
+    .feature-card:hover { box-shadow: var(--nm-hover); transform: translateY(-3px); }
+    .feature-card__icon {
+      width: 54px; height: 54px; flex-shrink: 0;
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+    }
+    .icon-purple { background: linear-gradient(135deg, #e8e4ff, #d0c8f8); }
+    .icon-green  { background: linear-gradient(135deg, #d4f0dd, #b8e6c4); }
+    .icon-pink   { background: linear-gradient(135deg, #ffe4ec, #ffc8d8); }
+    .icon-blue   { background: linear-gradient(135deg, #dff0ff, #c0dfff); }
+    .feature-card__title { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
+    .feature-card__desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 14px; }
+    .feature-card__link {
+      font-size: 0.85rem; font-weight: 700; color: var(--lavender-dark);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .feature-card__link::after { content: '→'; transition: transform 0.2s; }
+    .feature-card:hover .feature-card__link::after { transform: translateX(4px); }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 72px 0; text-align: center;
+      background: linear-gradient(135deg, var(--lavender-dark) 0%, var(--lavender-deep) 100%);
+      color: white; position: relative; overflow: hidden;
+    }
+    .cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cta__inner { position: relative; z-index: 1; }
+    .cta__title { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 800; margin-bottom: 16px; }
+    .cta__sub { opacity: 0.8; max-width: 480px; margin: 0 auto 36px; font-size: 1rem; }
+    .cta__actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn--white { background: white; color: var(--lavender-dark); }
+    .btn--white:hover { background: var(--lavender); }
+    .btn--outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+    .btn--outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+    @media (max-width: 900px) {
+      .hero__inner { grid-template-columns: 1fr; text-align: center; }
+      .hero__sub { margin: 0 auto 36px; }
+      .hero__actions { justify-content: center; }
+      .hero__anon { justify-content: center; }
+      .hero__visual { max-width: 280px; margin: 0 auto; }
+      .stats__grid { grid-template-columns: repeat(2, 1fr); }
+      .features__grid { grid-template-columns: 1fr; }
+      .hero__title { font-size: 2.4rem; }
+      .hero__float-badge { display: none; }
+    }
+    @media (max-width: 480px) {
+      .hero__title { font-size: 2rem; }
+      .stats__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo" aria-label="MindCare — главная">
+      <img src="image1.png" alt="" class="logo__img" onerror="this.style.display='none'"/>
+      <span class="logo__text">Mind<span class="logo__accent">Care</span></span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        <li><a href="index.html"      class="nav__link active">Главная</a></li>
+        <li><a href="catalog.html"    class="nav__link">Психологи</a></li>
+        <li><a href="tests.html"      class="nav__link">Тесты</a></li>
+        <li><a href="chat.html"       class="nav__link">Чат</a></li>
+        <li><a href="mood.html"       class="nav__link">Настроение</a></li>
+      </ul>
+    </nav>
+
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <button class="btn btn--danger btn--sm header__emergency" id="emergencyBtn">🆘 Экстренная помощь</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero__blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="container hero__inner">
+    <div class="hero__content">
+      <span class="hero__eyebrow">Психологическая служба колледжа</span>
+      <h1 class="hero__title">Ты не один.<br/><em>Мы поможем.</em></h1>
+      <p class="hero__sub">Анонимная, безопасная и доступная психологическая поддержка для студентов и сотрудников.</p>
+      <div class="hero__actions">
+        <a href="catalog.html" class="btn btn--primary">Найти психолога</a>
+        <a href="tests.html"   class="btn btn--secondary">Пройти тест</a>
+      </div>
+      <span class="hero__anon">Полная анонимность гарантирована</span>
+    </div>
+
+    <div class="hero__visual">
+      <div class="hero__logo-wrap">
+        <img src="image2.png" alt="MindCare логотип" class="hero__logo-img"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"/>
+        <div class="hero__logo-fallback" style="display:none">🌿</div>
+      </div>
+      <div class="hero__float-badge badge-1">💬 Анонимный чат</div>
+      <div class="hero__float-badge badge-2">🔒 100% конфиденциально</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats__grid">
+      <div class="stat-card nm reveal">
+        <span class="stat-card__num">500+</span>
+        <span class="stat-card__label">студентов получили помощь</span>
+      </div>
+      <div class="stat-card nm reveal">
+        <span class="stat-card__num">12</span>
+        <span class="stat-card__label">специалистов в команде</span>
+      </div>
+      <div class="stat-card nm reveal">
+        <span class="stat-card__num">100%</span>
+        <span class="stat-card__label">анонимность</span>
+      </div>
+      <div class="stat-card nm reveal">
+        <span class="stat-card__num">24/7</span>
+        <span class="stat-card__label">чат-поддержка</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="container">
+    <div class="features__header">
+      <span class="section-eyebrow">Возможности</span>
+      <h2 class="section-title">Всё необходимое в одном месте</h2>
+      <p class="section-sub">Выбери подходящий формат поддержки — от живого специалиста до анонимного бота</p>
+    </div>
+    <div class="features__grid">
+      <a href="catalog.html" class="feature-card nm reveal">
+        <div class="feature-card__icon icon-purple">🧠</div>
+        <div>
+          <div class="feature-card__title">Выбор психолога</div>
+          <div class="feature-card__desc">Найди специалиста по направлению, методу и расписанию. КПТ, гештальт, арт-терапия.</div>
+          <span class="feature-card__link">Перейти к каталогу</span>
+        </div>
+      </a>
+      <a href="tests.html" class="feature-card nm reveal">
+        <div class="feature-card__icon icon-green">📋</div>
+        <div>
+          <div class="feature-card__title">Экспресс-тесты</div>
+          <div class="feature-card__desc">Диагностика выгорания, тревожности и стресса за 2 минуты. Результаты только твои.</div>
+          <span class="feature-card__link">Пройти тест</span>
+        </div>
+      </a>
+      <a href="chat.html" class="feature-card nm reveal">
+        <div class="feature-card__icon icon-pink">💬</div>
+        <div>
+          <div class="feature-card__title">Анонимный чат</div>
+          <div class="feature-card__desc">Поговори с ботом без регистрации прямо сейчас или запишись на сессию со специалистом.</div>
+          <span class="feature-card__link">Открыть чат</span>
+        </div>
+      </a>
+      <a href="mood.html" class="feature-card nm reveal">
+        <div class="feature-card__icon icon-blue">🌤</div>
+        <div>
+          <div class="feature-card__title">Дневник настроения</div>
+          <div class="feature-card__desc">Отслеживай эмоциональное состояние каждый день и замечай паттерны в своём самочувствии.</div>
+          <span class="feature-card__link">Открыть трекер</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container cta__inner">
+    <h2 class="cta__title">Готов сделать первый шаг?</h2>
+    <p class="cta__sub">Обратиться за помощью — это смелость, а не слабость. Мы рядом.</p>
+    <div class="cta__actions">
+      <a href="catalog.html" class="btn btn--white">Найти специалиста</a>
+      <a href="chat.html"    class="btn btn--outline">Поговорить анонимно</a>
+    </div>
+  </div>
+</section>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-overlay" id="emergencyModal" hidden>
+  <div class="modal nm">
+    <h2>🆘 Экстренная помощь</h2>
+    <p>Если тебе или твоим близким угрожает опасность — не молчи. Звони прямо сейчас:</p>
+    <ul style="margin:18px 0;padding-left:20px;text-align:left;line-height:2.2">
+      <li><strong>8 (800) 2000-122</strong> — Единый телефон доверия (бесплатно)</li>
+      <li><strong>+7 (495) 575-87-70</strong> — Горячая линия психологической помощи</li>
+      <li><strong>112</strong> — Экстренные службы</li>
+    </ul>
+    <button class="btn btn--primary" id="closeEmergency">Понятно, закрыть</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__brand">
+      <div class="footer__logo">Mind<span>Care</span></div>
+    </div>
+    <p>© 2026 Психологическая служба колледжа. Все права защищены.</p>
+    <p style="margin-top:8px">
+      <a href="catalog.html">Психологи</a> ·
+      <a href="tests.html">Тесты</a> ·
+      <a href="chat.html">Чат</a> ·
+      <a href="mood.html">Настроение</a>
+    </p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
